@@ -29,51 +29,74 @@ class Database:
 
     def create_table_users(self):
         sql = """
-        CREATE TABLE IF NOT EXISTS USERS(
-        full_name TEXT,
-        telegram_id NUMBER unique );
-              """
+        CREATE TABLE IF NOT EXISTS users(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            full_name TEXT,
+            telegram_id INTEGER UNIQUE
+        );
+        """
+        self.execute(sql, commit=True)
+
+    def create_table_voice(self):
+        sql = """
+        CREATE TABLE IF NOT EXISTS voice(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            voice_file_id TEXT
+        );
+        """
         self.execute(sql, commit=True)
 
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
-            f"{item} = ?" for item in parameters
+            f"{key} = ?" for key in parameters
         ])
         return sql, tuple(parameters.values())
 
-
-    def add_user(self, telegram_id:int, full_name:str):
-
+    def add_voice(self, name: str, voice_file_id: str):
         sql = """
-        INSERT INTO Users(telegram_id, full_name) VALUES(?, ?);
+        INSERT INTO voice(name, voice_file_id) VALUES(?, ?);
         """
-        self.execute(sql, parameters=(telegram_id, full_name), commit=True)
+        self.execute(sql, parameters=(name, voice_file_id), commit=True)
 
-
-    def select_all_users(self):
-        sql = """
-        SELECT * FROM Users;
-        """
+    def voice_data(self):
+        sql = "SELECT * FROM voice;"
         return self.execute(sql, fetchall=True)
 
+    def get_voices_by_name(self, name: str):
+        sql = "SELECT * FROM voice WHERE name = ?;"
+        return self.execute(sql, parameters=(name,), fetchall=True)
+
+    async def search_voices_title(self, title: str):
+        sql = """
+        SELECT * FROM voice WHERE name LIKE ?;
+        """
+        return self.execute(sql, parameters=(f"%{title}%",), fetchall=True)
+
+    def add_user(self, telegram_id: int, full_name: str):
+        sql = """
+        INSERT INTO users(full_name, telegram_id) VALUES(?, ?);
+        """
+        self.execute(sql, parameters=(full_name, telegram_id), commit=True)
+
+    def select_all_users(self):
+        sql = "SELECT * FROM users;"
+        return self.execute(sql, fetchall=True)
 
     def select_user(self, **kwargs):
-        sql = "SELECT * FROM Users WHERE;"
+        sql = "SELECT * FROM users WHERE "
         sql, parameters = self.format_args(sql, kwargs)
-
         return self.execute(sql, parameters=parameters, fetchone=True)
 
     def count_users(self):
-        return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
-
+        return self.execute("SELECT COUNT(*) FROM users;", fetchone=True)
 
     def delete_users(self):
-        self.execute("DELETE FROM Users WHERE TRUE;", commit=True)
-    
+        self.execute("DELETE FROM users;", commit=True)
+
     def all_users_id(self):
-        return self.execute("SELECT telegram_id FROM Users;", fetchall=True)
-    
+        return self.execute("SELECT telegram_id FROM users;", fetchall=True)
 
 
 def logger(statement):

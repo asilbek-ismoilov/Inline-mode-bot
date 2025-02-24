@@ -3,6 +3,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 from filters.admin import IsBotAdminFilter
 from states.reklama import Adverts
+from states.help_stt import Voice
 from aiogram.fsm.context import FSMContext
 from keyboard_buttons.default import admin_keyboard
 import time 
@@ -42,3 +43,32 @@ async def send_advert(message:Message,state:FSMContext):
     await message.answer(f"Reklama {count}ta foydalanuvchiga yuborildi")
     await state.clear()
 
+
+@dp.message(F.text == "Ovoz qo'shish",IsBotAdminFilter(ADMINS))
+async def add_voice(message:Message, state:FSMContext):
+    await message.answer(text="➕ Qo'shish \nOvoz nomini kiriting !")
+    await state.set_state(Voice.name)
+
+@dp.message(F.text, Voice.name, IsBotAdminFilter(ADMINS))
+async def add_voice_name(message:Message, state:FSMContext):
+    name = message.text
+    await state.update_data(name = name)
+    await message.answer(text="Ovozni yuboring !")
+    await state.set_state(Voice.voice)
+
+@dp.message(lambda message: message.voice or message.audio, Voice.voice, IsBotAdminFilter(ADMINS))
+async def add_voice_file(message:Message, state:FSMContext):
+    data = await state.get_data()
+    name = data.get("name")
+
+    if message.audio: 
+        voice = message.audio.file_id
+        print(f"audio - {voice}")
+        
+    elif message.voice: 
+        voice = message.voice.file_id
+        print(f"voice - {voice}")
+
+    db.add_voice(name=name, voice_file_id=voice)
+    await message.answer(text="Ovoz muvaffaqiyatli qo'shildi !")
+    await state.clear()
