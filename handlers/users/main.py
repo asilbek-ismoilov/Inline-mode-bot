@@ -1,41 +1,30 @@
-from aiogram.types import InlineQuery, InlineQueryResultCachedVoice, InlineQueryResultArticle, InputTextMessageContent
-import wikipedia as wiki  
-from loader import dp, db
-
-from aiogram.types import InlineQuery, InlineQueryResultCachedVoice
-from loader import dp, db
-
-@dp.inline_query()
-async def inline_voice_search(inline_query: InlineQuery):
-    title = inline_query.query.strip()
-
-    if not title:
-        return  # Agar foydalanuvchi hech narsa yozmasa, hech narsa qaytarmaymiz.
-
-    voices = await db.search_voices_title(title)
-
-    results = [
-        InlineQueryResultCachedVoice(
-            id=str(voice[0]),  # id ustuni (avvalgi `voice[0]`)
-            voice_file_id=voice[2],  # To‘g‘ri indekslangan `voice_file_id`
-            title=voice[1]  # `name` maydoni
-        ) for voice in voices[:10]
-    ]
-
-    await inline_query.answer(results=results, cache_time=1)
-
-
+from loader import dp
+from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 
 # @dp.inline_query()
-# async def maqola(inline_query:InlineQuery):
+# async def inline_query(query: InlineQuery):
+#     text = query.query  # Foydalanuvchi yozgan so'z
+    
+#     # Agar foydalanuvchi hech narsa yozmasa, natija berilmaydi
+#     if not text:
+#         return
+    
 #     results = [
 #         InlineQueryResultArticle(
 #             id="1",
-#             title="Navoiy",
-#             input_message_content=InputTextMessageContent(message_text="https://en.wikipedia.org/wiki/Navoiy"),
-#             description="Navoiy go'zal shaxar",
-#             thumbnail_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Rabati_Malik%2C_Navoiy%2C_Uzbekistan.jpg/375px-Rabati_Malik%2C_Navoiy%2C_Uzbekistan.jpg"
-#         )
+#             title="Salom!",
+#             input_message_content=InputTextMessageContent(message_text="Assalomu alaykum!"),
+#         ),
+#         InlineQueryResultArticle(
+#             id="2",
+#             title="Qanday?",
+#             input_message_content=InputTextMessageContent(message_text="Qandaysiz?"),
+#         ),
+#         InlineQueryResultArticle(
+#             id="3",
+#             title="Rahmat",
+#             input_message_content=InputTextMessageContent(message_text="Rahmat!"),
+#         ),
 #     ]
-#     await inline_query.answer(results=results)
 
+#     await query.answer(results, cache_time=1)  # 1 soniya cache qilish
