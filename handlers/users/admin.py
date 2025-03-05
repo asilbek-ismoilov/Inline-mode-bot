@@ -43,6 +43,7 @@ async def send_advert(message:Message,state:FSMContext):
     await message.answer(f"Reklama {count}ta foydalanuvchiga yuborildi")
     await state.clear()
 
+# ----------------------------------------------------------------------
 
 @dp.message(F.text == "Ovoz qo'shish",IsBotAdminFilter(ADMINS))
 async def add_voice(message:Message, state:FSMContext):
