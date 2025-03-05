@@ -19,7 +19,7 @@ from aiogram.filters import or_f
 # -----------------------------------------------------------------------
 
 # @dp.inline_query() 
-# async def inline_voice_search(inline_query: InlineQuery): 
+# async def inline_voice(inline_query: InlineQuery): 
 #     results = [ 
 #         InlineQueryResultCachedVoice( 
 #             id="1", 
@@ -36,18 +36,18 @@ from aiogram.filters import or_f
 # -----------------------------------------------------------------------
 
 
-@dp.inline_query()
-async def inline_voice_search(inline_query: InlineQuery):
-    title = inline_query.query
-    print("title", title)
+# @dp.inline_query()
+# async def inline_voice_search(inline_query: InlineQuery):
+#     title = inline_query.query
+#     print("title", title)
 
-    audiolar = db.search_voices_title(title)  
+#     audiolar = db.search_voices_title(title)  
 
-    results = [
-        InlineQueryResultCachedVoice(
-            id=f"{audio[0]}",         # `id`
-            voice_file_id=audio[2],   # `voice_file_id`
-            title=audio[1]            # `name`
-        ) for audio in audiolar[:5]
-    ]
-    await inline_query.answer(results=results)
+#     results = [
+#         InlineQueryResultCachedVoice(
+#             id=f"{audio[0]}",         # `id`
+#             voice_file_id=audio[2],   # `voice_file_id`
+#             title=audio[1]            # `name`
+#         ) for audio in audiolar[:5]
+#     ]
+#     await inline_query.answer(results=results)

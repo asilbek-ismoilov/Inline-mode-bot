@@ -5,3 +5,4 @@ from . import about
 from . import xabar
 from . import main
 from . import voice
+from . import img
