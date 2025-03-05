@@ -1,3 +1,5 @@
+import time 
+from aiogram import F
 from loader import bot,db,dp,ADMINS
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -6,8 +8,6 @@ from states.reklama import Adverts
 from states.help_stt import Voice
 from aiogram.fsm.context import FSMContext
 from keyboard_buttons.default import admin_keyboard
-import time 
-from aiogram import F
 
 
 @dp.message(Command("admin"),IsBotAdminFilter(ADMINS))
@@ -45,7 +45,7 @@ async def send_advert(message:Message,state:FSMContext):
 
 # ----------------------------------------------------------------------
 
-@dp.message(F.text == "Ovoz qo'shish",IsBotAdminFilter(ADMINS))
+@dp.message(F.text == "Ovoz qo'shish", IsBotAdminFilter(ADMINS))
 async def add_voice(message:Message, state:FSMContext):
     await message.answer(text="➕ Qo'shish \nOvoz nomini kiriting !")
     await state.set_state(Voice.name)

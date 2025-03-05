@@ -4,6 +4,7 @@ from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessag
 # @dp.inline_query()
 # async def inline_query(query: InlineQuery):
 #     text = query.query  # Foydalanuvchi yozgan so'z
+#     print(text)
     
 #     # Agar foydalanuvchi hech narsa yozmasa, natija berilmaydi
 #     if not text:

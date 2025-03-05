@@ -61,7 +61,7 @@ class Database:
         sql = """
         CREATE TABLE IF NOT EXISTS voice(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT UNIQUE,
+            name TEXT,
             voice_file_id TEXT
         );
         """
